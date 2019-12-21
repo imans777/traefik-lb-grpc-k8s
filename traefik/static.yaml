@@ -1,0 +1,41 @@
+apiVersion: v1
+data:
+  static-config.toml: |
+    [global]
+      checkNewVersion = false
+      sendAnonymousUsage = false
+
+    [entryPoints]
+      [entryPoints.web]
+        address = ":80"
+
+    [entryPoints.traefik]
+      address = ":8000"
+
+    [entryPoints.metrics]
+      address = ":8080"
+
+    [log]
+      level = "DEBUG"
+      
+    [accessLog]
+
+    [api]
+      dashboard = true
+      debug = true
+      insecure = true
+
+    [ping]
+      entryPoint = "traefik"
+
+    [providers.file]
+      watch = false
+      filename = "/config/dynamic/dynamic-configs.toml"
+
+    [metrics]
+      [metrics.prometheus]
+        entryPoint = "metrics"
+kind: ConfigMap
+metadata:
+  name: static-config
+

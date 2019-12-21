@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: traefik
+  name: traefik
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      containers:
+        - args:
+            - --configFile=/config/static-config.toml
+          image: traefik:2.1.1
+          name: traefik
+          ports:
+            - name: web
+              containerPort: 80
+              protocol: TCP
+            - name: api
+              containerPort: 8000
+              protocol: TCP
+            - name: metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: websecure
+              containerPort: 443
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /config
+              name: static-config
+            - mountPath: /config/dynamic
+              name: dynamic-config
+      dnsPolicy: ClusterFirst
+      volumes:
+        - configMap:
+            name: static-config
+          name: static-config
+        - configMap:
+            name: dynamic-config
+          name: dynamic-config

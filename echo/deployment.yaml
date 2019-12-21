@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: echo
+  name: echo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: echo
+  template:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+      - image: imans77/echo_grpc:latest
+        name: echo
+        ports:
+        - containerPort: 80
+          name: web
+          protocol: TCP
+        - containerPort: 50051
+          name: grpc
+          protocol: TCP
+        - containerPort: 50050
+          name: metrics
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+
